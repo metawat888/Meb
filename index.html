@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Book Gallery</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'Noto Sans Thai', 'sans-serif'] },
+                    animation: { blob: "blob 10s infinite" },
+                    keyframes: {
+                        blob: {
+                            "0%": { transform: "translate(0px, 0px) scale(1)" },
+                            "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                            "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                            "100%": { transform: "translate(0px, 0px) scale(1)" },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar for Text Boxes */
+        .pro-scroll::-webkit-scrollbar { width: 4px; }
+        .pro-scroll::-webkit-scrollbar-track { background: transparent; }
+        .pro-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .pro-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+    </style>
+</head>
+<body class="relative bg-slate-50 text-slate-800 font-sans antialiased min-h-screen overflow-x-hidden pb-20">
+
+    <!-- Fixed Decorative Background Blobs -->
+    <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob -z-10"></div>
+    <div class="fixed top-[20%] right-[-10%] w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-2000 -z-10"></div>
+    <div class="fixed bottom-[-20%] left-[20%] w-96 h-96 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob animation-delay-4000 -z-10"></div>
+
+    <!-- Header Section -->
+    <div class="pt-16 pb-10 px-4 text-center z-10 relative">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">ผลงานทางวิชาการ</h1>
+        <p class="text-lg text-slate-500 max-w-2xl mx-auto">รวบรวมผลงานหนังสือ อีบุ๊ก ที่พร้อมให้คุณได้อ่านและค้นพบแรงบันดาลใจใหม่ๆ</p>
+    </div>
+
+    <!-- Book Grid Container (JS will inject cards here) -->
+    <div id="book-gallery" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-8 max-w-7xl mx-auto z-10 relative">
+        <!-- Cards will be generated here -->
+    </div>
+
+    <!-- Scripts for dynamic rendering -->
+    <script>
+        // =========================================================================
+        // 📚 วิธีเพิ่มหนังสือ: ให้ Copy บล็อกเครื่องหมายปีกกา { ... }, แล้ววางต่อกัน 
+        // พร้อมเปลี่ยนข้อมูล title, subtitle, iframeSrc, และ description ได้เลย!
+        // =========================================================================
+        const booksData = [
+            {
+                title: "That School No Teach",
+                subtitle: "สิ่งที่โรงเรียนไม่ได้สอน",
+                iframeSrc: "https://www.mebmarket.com/embed.php?seller_link=YToyOntzOjc6InVzZXJfaWQiO3M6NzoiOTQzMTk4MiI7czo3OiJib29rX2lkIjtzOjY6IjQ4NDYzMCI7fQ&1794305198845",
+                bookLink: "https://www.mebmarket.com/index.php?action=BookDetails&book_id=484630", // เพิ่มลิงก์หน้าหนังสือโดยตรงสำหรับปุ่มใหม่
+                description: `ตอนเด็ก ๆ เราถูกสอนให้เดินตามสมการที่ดูเหมือนจะเรียบง่าย ตั้งใจเรียนให้ได้เกรดดี เข้าโรงเรียนที่ดี หางานที่มั่นคง แล้วชีวิตจะประสบความสำเร็จ<br><br>แต่เมื่อโตขึ้น เรากลับพบว่าโลกแห่งความเป็นจริงซับซ้อนกว่านั้นมาก หนังสือเล่มนี้จะพังทลายกรอบความคิดเดิมๆ และพาคุณไปสำรวจบทเรียนชีวิตที่สำคัญ ซึ่งไม่มีสอนในห้องเรียน...`
+            }
+            // ในอนาคตหากมีเล่มใหม่ สามารถพิมพ์เครื่องหมายลูกน้ำ (,) ต่อท้ายวงเล็บปีกกาด้านบน แล้วคัดลอกชุดข้อมูลมาวางเพิ่มได้เลย
+        ];
+
+        // Function to render books
+        const galleryContainer = document.getElementById('book-gallery');
+
+        galleryContainer.innerHTML = booksData.map((book, index) => `
+            <div class="bg-white/80 backdrop-blur-2xl rounded-[2rem] shadow-xl hover:shadow-2xl border border-white/60 p-6 flex flex-col gap-6 transition-all hover:-translate-y-2 duration-500">
+                
+                <!-- Title -->
+                <div class="text-center">
+                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900 leading-tight">${book.title}</h2>
+                    <h3 class="text-sm font-medium text-indigo-500 mt-1">${book.subtitle}</h3>
+                </div>
+
+                <!-- Iframe Widget (Original size to show Meb button) -->
+                <div class="flex justify-center items-start w-full rounded-xl shadow-lg overflow-hidden relative bg-white ring-2 ring-slate-100 mb-2">
+                    <iframe 
+                        class="iframe_seller_link w-full relative z-10" 
+                        height="220" 
+                        src="${book.iframeSrc}" 
+                        frameborder="0"
+                        scrolling="no"
+                        style="max-width:100%;">
+                    </iframe>
+                </div>
+
+                <!-- Scrollable Description -->
+                <div class="relative flex-grow">
+                    <div class="absolute -top-3 -left-2 text-3xl text-indigo-200/50 font-serif leading-none select-none">"</div>
+                    <div class="bg-slate-50/80 rounded-xl p-4 pl-5 border-l-4 border-indigo-400 h-full flex flex-col">
+                        <div class="overflow-y-auto h-32 pr-2 text-slate-600 text-sm leading-relaxed pro-scroll font-light">
+                            <p>${book.description}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        `).join('');
+    </script>
+</body>
+</html>
